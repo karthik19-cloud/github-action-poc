@@ -1,12 +1,12 @@
 # .github/workflows/deploy.yaml nodejs app
-name: Build and Push to DockerHub
+name: CI
 on:
   push:
     branches:
       - main
 jobs:
   build:
-    name: VAULT DEMO PIPELINE
+    name: ci
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,7 +33,7 @@ jobs:
       - name: npm Build
         id: npm_build
         run: npm run build --if-present
-      - name: npm Test
+      - name: npm test
         id: npm_test
         run: npm test
       - name: Upload Unit Test Results
@@ -42,7 +42,13 @@ jobs:
         with:
           name: Unit Test Results (Python ${{ matrix.python-version }})
           path: jest-junit.xml
-          
+      - name: Run linters & prettier
+        uses: wearerequired/lint-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Enable linters
+          eslint: true
+          prettier: true
       - name: Import Secrets
         id: Import_vault_secret
         uses: hashicorp/vault-action@v2.0.1 
@@ -93,26 +99,7 @@ jobs:
           files: jest-junit.xml      
           
           
-  check_user_permission:
-      runs-on: ubuntu-latest
-      name: A job to check user's permission level
-      steps:
-      # Check for write permission
-        - name: Check user permission
-          id: check
-          uses: scherermichael-oss/action-has-permission@master
-          with:
-            required-permission: write
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Use the output from the `check` step
-        - name: Run only if user has sufficient permissions
-          if: steps.check.outputs.has-permission
-          run: echo "Congratulations! Your permissions to access the repository are sufficient."
-        - name: Run only if user has NOT sufficient permissions
-          if: "! steps.check.outputs.has-permission"
-          run: echo "Sorry! Your permissions are insufficient."  
-   
+     
   Polaris-scan:
     name: "Polaris Scan"
     #needs: build
