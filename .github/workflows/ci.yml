@@ -1,12 +1,12 @@
 # .github/workflows/deploy.yaml nodejs app
-name: CI
+name: Test, Build & Deploy
 on:
   push:
     branches:
       - main
 jobs:
-  build:
-    name: ci
+  test:
+    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,38 +49,50 @@ jobs:
           # Enable linters
           eslint: true
           prettier: true
-      - name: Import Secrets
-        id: Import_vault_secret
-        uses: hashicorp/vault-action@v2.0.1 
-        with:
-          url: http://34.69.137.61:8200
-          tlsSkipVerify: true
-          token: ${{ secrets.VAULT_TOKEN }}
-          secrets: |
-            kv/data/ci/dockerUsername DOCKERHUB_USERNAME;
-            kv/data/ci/dockerPassword DOCKERHUB_PASSWORD
-      - name: Build Docker Image
-        id: Build_Docker
-        run: docker build . --no-cache --file Dockerfile -t shelnaop/vault_poc_repo:vault-node_app
-      - name: Login Dockerhub
-        id: Login_Dockerhub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
-          password: ${{ env.DOCKERHUB_PASSWORD }}
-      - name: Push Image to Dockerhub
-        id: Push_Image
-        run: docker push shelnaop/vault_poc_repo:vault-node_app
-      - uses: act10ns/slack@v1
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#project'
-        if: always()
-        
+      
+    
+  docker:
+      name: Publish doscker hub      
+      runs-on: ubuntu-18.04
+      needs: [test]
+      env:
+        REPO: ${{ secrets.DOCKER_REPO }}
+      steps:
+        - uses: actions/setup-node@v1
+        - name: Use Node.js ${{ matrix.node-version }}
+          id: setup_NodeJS          
+          with:
+            node-version: ${{ matrix.node-version }}
+        - name: Login Dockerhub
+          id: Login_Dockerhub
+          uses: docker/login-action@v1
+          with:
+            username: ${{ env.DOCKERHUB_USERNAME }}
+            password: ${{ env.DOCKERHUB_PASSWORD }}
+        - name: Build image
+          id: Build_Docker
+          run: docker build . --no-cache --file Dockerfile -t shelnaop/vault_poc_repo:vault-node_app
+        - name: Push Image to Dockerhub
+          id: Push_Image
+          run: docker push shelnaop/vault_poc_repo:vault-node_app
+         
+  provision:
+    name: Provision env      
+    runs-on: ubuntu-18.04
+    needs: [docker]
+    env:
+      REPO: ${{ secrets.DOCKER_REPO }}    
+      
+  deploy:
+    name: Deploy the docker image  
+    runs-on: ubuntu-18.04
+    needs: [provision]
+    env:
+      REPO: ${{ secrets.DOCKER_REPO }}
+     
   publish-test-results:
     name: "Publish Unit Tests Results"
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success() || failure()
