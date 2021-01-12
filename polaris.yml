@@ -18,4 +18,4 @@ analyze:
 install: 
   coverity: 
     version: default
-serverUrl: https://ikea.polaris.synopsys.com
+serverUrl: ${{ secrets.POLARIS_SERVER_URL}}
