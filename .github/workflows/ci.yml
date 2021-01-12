@@ -88,6 +88,26 @@ jobs:
     runs-on: ubuntu-18.04
     needs: [provision]
     env:
+      REPO: ${{ secrets.DOCKER_REPO }}  
+ 
+  serviceAvailability:
+    name: ServiceAvailability  
+    runs-on: ubuntu-18.04
+    needs: [deploy]
+    env:
+      REPO: ${{ secrets.DOCKER_REPO }}
+  notification:
+    name: slack notification  
+    runs-on: ubuntu-18.04
+    needs: [test, deploy]
+    env:
+      REPO: ${{ secrets.DOCKER_REPO }}
+  
+  splunk:
+    name: splunk  
+    runs-on: ubuntu-18.04
+    needs: [deploy]
+    env:
       REPO: ${{ secrets.DOCKER_REPO }}
      
   publish-test-results:
