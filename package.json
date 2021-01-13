@@ -8,8 +8,7 @@
     "start": "node server.js",
     "eslint": "eslint ./",
     "eslint-fix": "eslint ./ --fix",
-    "test": "jest --ci --reporters=default --reporters=jest-junit",
-    "build": "tsc"
+    "test": "jest --ci --reporters=default --reporters=jest-junit"   
   },  
   "dependencies": {
     "express": "^4.16.1",
