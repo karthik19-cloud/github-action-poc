@@ -9,7 +9,7 @@ env:
   SERVICE_NAME: helloworld-node
 jobs:
   test:
-    name: Unit test / Lint
+    name: Unit test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,21 +33,22 @@ jobs:
       - name: npm test
         id: npm_test
         run: npm test
-      - name: Upload Unit Test Results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Unit Test Results (Python ${{ matrix.python-version }})
-          path: jest-junit.xml
-      - name: Run linters & prettier
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Enable linters
-          eslint: true
-          prettier: true
+          
       
-    
+  lint:
+      name: Lint & Prettier      
+      runs-on: ubuntu-18.04
+      needs: [test]      
+      steps:        
+        - uses: actions/checkout@v2
+        # Setup gcloud CLI
+        - uses: wearerequired/lint-action@v1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            # Enable linters
+            eslint: true
+            prettier: true
+  
   imageBuild:
       name: Build & Publish image to GCR      
       runs-on: ubuntu-18.04
@@ -113,7 +114,7 @@ jobs:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
       
   deploy:
-    name: Deploy image to Cloud Run
+    name: Deploy to Cloud Run
     runs-on: ubuntu-18.04
     needs: [provision]       
     steps:
