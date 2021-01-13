@@ -41,6 +41,8 @@ jobs:
       needs: [test]      
       steps:        
         - uses: actions/checkout@v2
+        - name: npm Install
+          run: npm install eslint prettier --save-dev     
         # Setup gcloud CLI
         - uses: wearerequired/lint-action@v1
           with:
