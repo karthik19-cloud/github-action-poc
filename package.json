@@ -5,9 +5,7 @@
   "author": "First Last <first.last@example.com>",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "eslint": "eslint ./",
-    "eslint-fix": "eslint ./ --fix",
+    "start": "node server.js",    
     "test": "jest"   
   },  
   "dependencies": {
