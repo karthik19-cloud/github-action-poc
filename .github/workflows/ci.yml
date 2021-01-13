@@ -51,44 +51,87 @@ jobs:
           prettier: true
       
     
-  docker:
-      name: Publish doscker hub      
+  imageBuild:
+      name: Publish image to GCR      
       runs-on: ubuntu-18.04
       needs: [test]
       env:
         REPO: ${{ secrets.DOCKER_REPO }}
-      steps:
-        - uses: actions/setup-node@v1
-        - name: Use Node.js ${{ matrix.node-version }}
-          id: setup_NodeJS          
+      steps:        
+        - uses: actions/checkout@v2
+        # Setup gcloud CLI
+        - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
           with:
-            node-version: ${{ matrix.node-version }}
-        - name: Login Dockerhub
-          id: Login_Dockerhub
-          uses: docker/login-action@v1
-          with:
-            username: ${{ env.DOCKERHUB_USERNAME }}
-            password: ${{ env.DOCKERHUB_PASSWORD }}
-        - name: Build image
-          id: Build_Docker
-          run: docker build . --no-cache --file Dockerfile -t shelnaop/vault_poc_repo:vault-node_app
-        - name: Push Image to Dockerhub
-          id: Push_Image
-          run: docker push shelnaop/vault_poc_repo:vault-node_app
+            version: '290.0.1'
+            service_account_key: ${{ secrets.RUN_SA_KEY }}
+            project_id: ${{ secrets.RUN_PROJECT }}
+
+        # Build and push image to Google Container Registry
+        - name: Build
+          run: |-
+            gcloud builds submit \
+              --quiet \
+              --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
          
   provision:
     name: Provision env      
     runs-on: ubuntu-18.04
-    needs: [docker]
+    needs: [imageBuild]
     env:
-      REPO: ${{ secrets.DOCKER_REPO }}    
+      REPO: ${{ secrets.DOCKER_REPO }} 
+    # Setup terraform CLI
+    steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    
+    # Terraform script checkout
+    - name: Terraform repository checkout 
+      uses: actions/checkout@v2
+      with:
+        repository: prasadjblin/tf-store
+        path: istudio-tf-scripts        
+        ssh-strict: false
+        #ssh-key: ${{ secrets.MGMT_SSH }}
+
+    - name: Terraform init
+      id: init
+      run: terraform init
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Terraform Refresh
+      id: refresh
+      run: terraform refresh
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
       
   deploy:
     name: Deploy the docker image  
     runs-on: ubuntu-18.04
     needs: [provision]
     env:
-      REPO: ${{ secrets.DOCKER_REPO }}  
+      REPO: ${{ secrets.DOCKER_REPO }}
+    steps:
+    - name: Deploy
+      run: |-
+        gcloud run deploy "$SERVICE_NAME" \
+          --quiet \
+          --region "$RUN_REGION" \
+          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --platform "managed" \
+          --allow-unauthenticated
  
   serviceAvailability:
     name: ServiceAvailability  
@@ -96,6 +139,16 @@ jobs:
     needs: [deploy]
     env:
       REPO: ${{ secrets.DOCKER_REPO }}
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v1.2
+        with:
+          # Check the following URLs one by one sequentially
+          url: https://helloworld-python-5pwvjfrcgq-uc.a.run.app
+          follow-redirect: no # Optional, defaults to "no"
+          max-attempts: 3 # Optional, defaults to 1
+          retry-delay: 5s # Optional, only applicable to max-attempts > 1
+  
   notification:
     name: slack notification  
     runs-on: ubuntu-18.04
