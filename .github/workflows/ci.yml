@@ -3,7 +3,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main
+      - ci-cd
 jobs:
   test:
     name: Test
