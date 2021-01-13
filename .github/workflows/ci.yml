@@ -116,9 +116,7 @@ jobs:
   deploy:
     name: Deploy the docker image  
     runs-on: ubuntu-18.04
-    needs: [provision]
-    env:
-      REPO: ${{ secrets.DOCKER_REPO }}
+    needs: [provision]    
     steps:
     - name: Deploy
       run: |-
