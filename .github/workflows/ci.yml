@@ -116,11 +116,7 @@ jobs:
   deploy:
     name: Deploy the docker image  
     runs-on: ubuntu-18.04
-    needs: [provision] 
-    env:
-      PROJECT_ID: ${{ secrets.RUN_PROJECT }}
-      RUN_REGION: us-central1
-      SERVICE_NAME: helloworld-node   
+    needs: [provision]       
     steps:
     - name: Deploy
       run: |-
@@ -128,6 +124,7 @@ jobs:
           --quiet \
           --region "$RUN_REGION" \
           --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --project "$PROJECT_ID"
           --platform "managed" \
           --allow-unauthenticated
  
