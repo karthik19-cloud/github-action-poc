@@ -9,7 +9,7 @@ env:
   SERVICE_NAME: helloworld-node
 jobs:
   test:
-    name: Unit test / Lint
+    name: Code build & test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -47,9 +47,21 @@ jobs:
           eslint: true
           prettier: true
       
-    
+  lint:
+      name: Lint & Prettier      
+      runs-on: ubuntu-18.04
+      needs: [test]      
+      steps:        
+        - uses: actions/checkout@v2
+        # Setup gcloud CLI
+        - uses: wearerequired/lint-action@v1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            # Enable linters
+            eslint: true
+            prettier: true
   imageBuild:
-      name: Build & Publish image to GCR      
+      name: Image Build & Publish to GCR      
       runs-on: ubuntu-18.04
       needs: [test]      
       steps:        
