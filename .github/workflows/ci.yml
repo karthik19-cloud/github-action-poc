@@ -139,15 +139,15 @@ jobs:
     needs: [deploy]
     env:
       REPO: ${{ secrets.DOCKER_REPO }}
-    steps:
-      - name: Check the deployed service URL
-        uses: jtalk/url-health-check-action@v1.2
-        with:
+    #steps:
+   #   - name: Check the deployed service URL
+   #     uses: jtalk/url-health-check-action@v1.2
+    #    with:
           # Check the following URLs one by one sequentially
-          url: https://helloworld-python-5pwvjfrcgq-uc.a.run.app
-          follow-redirect: no # Optional, defaults to "no"
-          max-attempts: 3 # Optional, defaults to 1
-          retry-delay: 5s # Optional, only applicable to max-attempts > 1
+      #    url: https://helloworld-python-5pwvjfrcgq-uc.a.run.app
+      #    follow-redirect: no # Optional, defaults to "no"
+      #    max-attempts: 3 # Optional, defaults to 1
+     #     retry-delay: 5s # Optional, only applicable to max-attempts > 1
   
   notification:
     name: slack notification  
