@@ -5,8 +5,12 @@
   "author": "First Last <first.last@example.com>",
   "main": "server.js",
   "scripts": {
-    "test": "jest --ci --reporters=default --reporters=jest-junit"
-  },
+    "start": "node server.js",
+    "eslint": "eslint ./",
+    "eslint-fix": "eslint ./ --fix",
+    "test": "jest --ci --reporters=default --reporters=jest-junit",
+    "build": "tsc"
+  },  
   "dependencies": {
     "express": "^4.16.1",
     "mkdirp": "^1.0.4",
@@ -17,7 +21,17 @@
   "devDependencies": {
     "libxmljs": "^0.19.7",
     "jest": "^24.9.0",
-    "jest-junit": "^10.0.0"
+    "jest-junit": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+        "@typescript-eslint/parser": "^3.8.0",
+        "eslint": "^7.6.0",
+        "eslint-config-standard": "^14.1.1",
+        "eslint-plugin-import": "^2.22.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.1",                  
+        "prettier": "2.0.5",
+        "pretty-quick": "^2.0.1",
   },
   "jest-junit": {
   "outputDirectory": "test_reports",
