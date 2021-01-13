@@ -1,13 +1,9 @@
 module.exports = {
-  testMatch: [
-    '**/*.spec.js',
-  ],
-  reporters: [
-    "default",
-    [ "jest-junit", 
-     {
-      outputDirectory: '.',
-      outputName: 'jest-junit.xml',
-    } ]
-  ]
+    clearMocks: true,
+    moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
+    roots: ['<rootDir>/src'],
+    testEnvironment: 'node',
+    transform: {
+        '^.+\\.tsx?$': 'ts-jest',
+    },
 };
