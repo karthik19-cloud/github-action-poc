@@ -9,7 +9,7 @@ env:
   SERVICE_NAME: helloworld-node
 jobs:
   test:
-    name: Test
+    name: Unit test / Lint
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,7 +49,7 @@ jobs:
       
     
   imageBuild:
-      name: Publish image to GCR      
+      name: Build & Publish image to GCR      
       runs-on: ubuntu-18.04
       needs: [test]      
       steps:        
@@ -69,7 +69,7 @@ jobs:
               --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
          
   provision:
-    name: Provision env      
+    name: Env Provision(Terraform)     
     runs-on: ubuntu-18.04
     needs: [imageBuild]
     env:
@@ -113,7 +113,7 @@ jobs:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
       
   deploy:
-    name: Deploy the docker image  
+    name: Deploy image to Cloud Run
     runs-on: ubuntu-18.04
     needs: [provision]       
     steps:
@@ -130,7 +130,7 @@ jobs:
           --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" --platform "managed" --allow-unauthenticated
  
   serviceAvailability:
-    name: ServiceAvailability  
+    name: Service Availability Check
     runs-on: ubuntu-18.04
     needs: [deploy]
     env:
@@ -188,7 +188,7 @@ jobs:
           /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure
    
   Blackduck-SCA:
-    name: "Blackduck SCA"
+    name: "Blackduck Scan"
     needs: [imageBuild]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
