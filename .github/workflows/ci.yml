@@ -1,4 +1,3 @@
-# .github/workflows/deploy.yaml nodejs app
 name: Test, Build & Deploy
 on:
   push:
@@ -14,12 +13,7 @@ jobs:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    steps:
-      - uses: act10ns/slack@v1
-        with:
-         status: starting
-         channel: '#project'
-         if: always()
+    steps:      
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         id: setup_NodeJS
