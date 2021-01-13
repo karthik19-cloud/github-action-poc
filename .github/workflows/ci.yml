@@ -116,7 +116,11 @@ jobs:
   deploy:
     name: Deploy the docker image  
     runs-on: ubuntu-18.04
-    needs: [provision]    
+    needs: [provision] 
+    env:
+      PROJECT_ID: ${{ secrets.RUN_PROJECT }}
+      RUN_REGION: us-central1
+      SERVICE_NAME: helloworld-node   
     steps:
     - name: Deploy
       run: |-
