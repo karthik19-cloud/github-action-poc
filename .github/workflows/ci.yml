@@ -127,35 +127,7 @@ jobs:
           --platform "managed" \
           --allow-unauthenticated
  
-  serviceAvailability:
-    name: ServiceAvailability  
-    runs-on: ubuntu-18.04
-    needs: [deploy]
-    env:
-      REPO: ${{ secrets.DOCKER_REPO }}
-    #steps:
-   #   - name: Check the deployed service URL
-   #     uses: jtalk/url-health-check-action@v1.2
-    #    with:
-          # Check the following URLs one by one sequentially
-      #    url: https://helloworld-python-5pwvjfrcgq-uc.a.run.app
-      #    follow-redirect: no # Optional, defaults to "no"
-      #    max-attempts: 3 # Optional, defaults to 1
-     #     retry-delay: 5s # Optional, only applicable to max-attempts > 1
-  
-  notification:
-    name: slack notification  
-    runs-on: ubuntu-18.04
-    needs: [test, deploy]
-    env:
-      REPO: ${{ secrets.DOCKER_REPO }}
-  
-  splunk:
-    name: splunk  
-    runs-on: ubuntu-18.04
-    needs: [deploy]
-    env:
-      REPO: ${{ secrets.DOCKER_REPO }}
+ 
      
   publish-test-results:
     name: "Publish Unit Tests Results"
