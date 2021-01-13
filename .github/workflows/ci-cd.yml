@@ -9,7 +9,7 @@ env:
   SERVICE_NAME: helloworld-node
 jobs:
   test:
-    name: Build & Unit test
+    name: Unit test / Lint
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -113,7 +113,7 @@ jobs:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
       
   deploy:
-    name: Deploy the image from gcr to cloud run
+    name: Deploy image to Cloud Run
     runs-on: ubuntu-18.04
     needs: [provision]       
     steps:
