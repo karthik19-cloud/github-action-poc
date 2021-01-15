@@ -198,7 +198,7 @@ jobs:
   
   Polaris-scan:
     name: "Polaris Scan"
-    needs: [Build,UnitTest]
+    needs: [UnitTest]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success()
@@ -216,7 +216,7 @@ jobs:
           /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure
   Blackduck-SCA:
     name: "Blackduck Scan"
-    needs: [Build,UnitTest]
+    needs: [UnitTest]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success()
