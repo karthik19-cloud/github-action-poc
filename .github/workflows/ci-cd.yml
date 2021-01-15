@@ -39,13 +39,13 @@ jobs:
         with:
           name: Unit Test Results (Python ${{ matrix.python-version }})
           path: jest-junit.xml
-      - name: Run linters & prettier
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Enable linters
-          eslint: true
-          prettier: true
+#       - name: Run linters & prettier
+#         uses: wearerequired/lint-action@v1
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           # Enable linters
+#           eslint: true
+#           prettier: true
       
   lint:
       name: Lint & Prettier      
