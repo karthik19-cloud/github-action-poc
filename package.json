@@ -6,7 +6,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",    
-    "test": "jest"   
+    "test": "jest",
+    "format:check": "prettier --check \"**/*.{js,jsx,yml,json,css,scss,md}\"",
+    "format": "prettier --write \"**/*.{js,jsx,yml,json,css,scss,md}\""
   },  
   "dependencies": {
     "express": "^4.16.1",
