@@ -201,7 +201,7 @@ jobs:
           args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_API_TOKEN}}" --detect.tools="DETECTOR"'
 #load-test
   load-test:
-    name: load-test
+    name: Performance Test
     needs: [serviceAvailability]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -240,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    name: Run WDIO tests
+    name: Integration Testing
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -262,9 +262,9 @@ jobs:
         id: installing_NPM
         run: npm install
       - run: npm ci  
-      - name: Run Tests
-        id: Running_tests
-        run: npm test
+#       - name: Run Tests
+#         id: Running_tests
+#         run: npm test
       - name: Test Completed
         uses: act10ns/slack@v1
         with:
