@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - ci-cd-gk
+      - shelna-blackduck
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -202,11 +202,12 @@ jobs:
   Blackduck-SCA:
     name: "Blackduck Scan"
     needs: [imageBuild]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success() || failure()
     steps:        
       - uses: actions/checkout@v2
+      - run: npm install
       - name: Software Composition Analysis with Black Duck
         uses: blackducksoftware/github-action@v2
         with:
