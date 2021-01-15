@@ -182,7 +182,7 @@ jobs:
      
   Polaris-scan:
     name: "Polaris Scan"
-    needs: [imageBuild]
+    needs: [test]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success() || failure()
@@ -201,7 +201,7 @@ jobs:
    
   Blackduck-SCA:
     name: "Blackduck Scan"
-    needs: [imageBuild]
+    needs: [test]
     runs-on: ubuntu-16.04
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success() || failure()
