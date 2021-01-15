@@ -214,16 +214,104 @@ jobs:
           wget -q https://ikea.polaris.synopsys.com/api/tools/polaris_cli-linux64.zip
           unzip -j polaris_cli-linux64.zip -d /tmp
           /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure
+#   Blackduck-SCA:
+#     name: "Blackduck Scan"
+#     needs: [UnitTest]
+#     runs-on: ubuntu-latest
+#     # the build-and-test job might be skipped, we don't need to run this job then
+#     if: success()
+#     steps:        
+#       - uses: actions/checkout@v2
+#       - name: Software Composition Analysis with Black Duck
+#         uses: blackducksoftware/github-action@v2
+#         with:
+#           args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_API_TOKEN}}" --detect.tools="DETECTOR"'
+
   Blackduck-SCA:
     name: "Blackduck Scan"
     needs: [UnitTest]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success()
     steps:        
       - uses: actions/checkout@v2
+      - run: npm install
       - name: Software Composition Analysis with Black Duck
         uses: blackducksoftware/github-action@v2
         with:
-          args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_API_TOKEN}}" --detect.tools="DETECTOR"'
+          args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_API_TOKEN}}" --detect.tools="DETECTOR" --logging.level.com.synopsys.integration="DEBUG"'
+    
+    #load-test
+  load-test:
+    name: Performance Test
+    needs: [serviceAvailability]
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v1
+      #- uses: actions/checkout@v2
+      - name: Job starting
+        uses: act10ns/slack@v1
+        with:
+              status: starting
+#               channel: '#nilasishtest'
+        if: always()
+      # Runs a single command using the runners shell
+      - name: Run local k6 test
+        uses: k6io/action@v0.1
+        with:
+              filename: test.js
+              cloud: true
+              token: 29e1e5f6d3f46ec287c75f8eb8d98439defba0ba848a3eacf84838a0a8674271
+      - name: Slack notification
+        uses: act10ns/slack@v1
+        with:
+             status: ${{ job.status }}
+             steps: ${{ toJson(steps) }}
+#              channel: '#nilasishtest'
+        if: always()
+  # This workflow contains a single job called "build"
+  Integration_Test:
+    # The type of runner that the job will run on
+    needs: [serviceAvailability]
+    runs-on: ubuntu-latest
+    env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    name: Integration Testing
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Start Selenoid
+        id: Starting_elenoid
+        uses: Xotabu4/selenoid-github-action@v1
+      - name: Job starting
+        uses: act10ns/slack@v1
+        with:
+              status: starting
+#               channel: '#nilasishtest'
+        if: always()
+      - uses: actions/checkout@v1
+      - name: NPM INSTALL
+        id: installing_NPM
+        run: npm install
+      - run: npm ci  
+      - name: Run Tests
+        id: Running_tests
+        run: npm test
+      - name: Test Completed
+        uses: act10ns/slack@v1
+        with:
+              status: Finished Successfully
+#               channel: '#nilasishtest'
+        if: always()
 
