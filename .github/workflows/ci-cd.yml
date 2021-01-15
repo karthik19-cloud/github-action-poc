@@ -8,8 +8,9 @@ env:
   RUN_REGION: us-central1
   SERVICE_NAME: helloworld-node
 jobs:
-  Build:
-    name: Unit test / Lint
+ Build:
+   
+    name: Builds
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,28 +31,34 @@ jobs:
       - name: npm Build
         id: npm_build
         run: npm run build --if-present
+        
+job1:
+  Unittest:
       - name: npm test
         id: npm_test
         run: npm test
-Unit Test:
+        needs: [Build] 
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: Unit Test Results (Python ${{ matrix.python-version }})
           path: jest-junit.xml
+          
+Linter:
       - name: Run linters & prettier
+        needs: [Unit-Test] 
         uses: wearerequired/lint-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable linters
           eslint: true
           prettier: true
-      
+          
 imageBuild:
       name: Build & Publish image to GCR      
       runs-on: ubuntu-18.04
-      needs: [test]      
+      needs: [Linter]      
       steps:        
         - uses: actions/checkout@v2
         # Setup gcloud CLI
@@ -68,7 +75,7 @@ imageBuild:
               --quiet \
               --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
          
-  provision:
+provision:
     name: Env Provision(Terraform)     
     runs-on: ubuntu-18.04
     needs: [imageBuild]
@@ -112,7 +119,7 @@ imageBuild:
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
       
-  deploy:
+deploy:
     name: Deploy image to Cloud Run
     runs-on: ubuntu-18.04
     needs: [provision]       
@@ -129,7 +136,7 @@ imageBuild:
           --region "$RUN_REGION" \
           --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" --platform "managed" --allow-unauthenticated
  
-  serviceAvailability:
+serviceAvailability:
     name: Service Availability Check
     runs-on: ubuntu-18.04
     needs: [deploy]
@@ -146,7 +153,7 @@ imageBuild:
           retry-delay: 5s # Optional, only applicable to max-attempts > 1
 
      
-  publish-test-results:
+publish-test-results:
     name: "Publish Unit Tests Results"
     needs: test
     runs-on: ubuntu-latest
@@ -164,11 +171,9 @@ imageBuild:
         with:
           check_name: Unit Test Results
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: jest-junit.xml      
+          files: jest-junit.xml 
           
-          
-     
-  Polaris-scan:
+Polaris-scan:
     name: "Polaris Scan"
     needs: [imageBuild]
     runs-on: ubuntu-latest
@@ -187,7 +192,7 @@ imageBuild:
           unzip -j polaris_cli-linux64.zip -d /tmp
           /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure
    
-  Blackduck-SCA:
+Blackduck-SCA:
     name: "Blackduck Scan"
     needs: [imageBuild]
     runs-on: ubuntu-latest
@@ -199,3 +204,4 @@ imageBuild:
         uses: blackducksoftware/github-action@v2
         with:
           args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_API_TOKEN}}" --detect.tools="DETECTOR"'
+
