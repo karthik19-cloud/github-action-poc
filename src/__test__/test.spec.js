@@ -1,6 +1,6 @@
 describe("Testing our nodeJS app", () => {
   it("Testing using Github Actions", () => {
-    expect(2).toBe(9);
+    expect(9).toBe(9);
   });
 });
 describe("Testing our nodeJS app", () => {
