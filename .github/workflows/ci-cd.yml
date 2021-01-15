@@ -266,7 +266,7 @@ jobs:
       - name: Run local k6 test
         uses: k6io/action@v0.1
         with:
-              filename: src/__test__/loadtest/test.js
+              filename: load.js
               cloud: true
               token: 29e1e5f6d3f46ec287c75f8eb8d98439defba0ba848a3eacf84838a0a8674271
       - name: Slack notification
