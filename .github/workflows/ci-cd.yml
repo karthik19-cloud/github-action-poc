@@ -234,3 +234,40 @@ jobs:
              steps: ${{ toJson(steps) }}
 #              channel: '#nilasishtest'
         if: always()
+  # This workflow contains a single job called "build"
+  Integration Test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    name: Run WDIO tests
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Start Selenoid
+        id: Starting_elenoid
+        uses: Xotabu4/selenoid-github-action@v1
+      - name: Job starting
+        uses: act10ns/slack@v1
+        with:
+              status: starting
+#               channel: '#nilasishtest'
+        if: always()
+      - uses: actions/checkout@v1
+      - name: NPM INSTALL
+        id: installing_NPM
+        run: npm install
+      - run: npm ci  
+      - name: Run Tests
+        id: Running_tests
+        run: npm test
+      - name: Test Completed
+        uses: act10ns/slack@v1
+        with:
+              status: Finished Successfully
+#               channel: '#nilasishtest'
+        if: always()
