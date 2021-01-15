@@ -35,7 +35,7 @@ jobs:
   UnitTest:
        name: Unittest
        runs-on: ubuntu-latest
-       needs: [Build] 
+#        needs: [Build] 
        steps:
         - name: npm test
           id: npm_test
@@ -49,7 +49,8 @@ jobs:
   Linter:
        name: Run linters & prettier
        runs-on: ubuntu-latest
-       needs: [UnitTest]
+       needs: [Build,UnitTest]
+       if: success()
        steps:
          - uses: wearerequired/lint-action@v1
            with:
@@ -171,10 +172,10 @@ jobs:
           files: jest-junit.xml 
   Polaris-scan:
     name: "Polaris Scan"
-    needs: [imageBuild]
+    needs: [Build,UnitTest]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
+    if: success()
     steps:        
       - uses: actions/checkout@v2       
       - name: Static Analysis with Polaris
@@ -189,10 +190,10 @@ jobs:
           /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure
   Blackduck-SCA:
     name: "Blackduck Scan"
-    needs: [imageBuild]
+    needs: [Build,UnitTest]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
+    if: success()
     steps:        
       - uses: actions/checkout@v2
       - name: Software Composition Analysis with Black Duck
