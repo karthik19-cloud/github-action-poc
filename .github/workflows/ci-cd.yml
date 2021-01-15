@@ -33,12 +33,19 @@ jobs:
   test:
     name: Unit test
     runs-on: ubuntu-latest   
+    needs: [Build]
     steps:      
       - uses: actions/checkout@v2     
       - run: npm install      
       - name: npm test
         id: npm_test
         run: npm test
+      - name: Publish Unit Test Results
+        uses: mikepenz/action-junit-report@v1
+        # if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_paths: reports/**/*.xml
 #       - name: Upload Unit Test Results
 #         if: always()
 #         uses: actions/upload-artifact@v2
@@ -67,6 +74,7 @@ jobs:
             # Enable linters
             eslint: true
             prettier: true
+           
   imageBuild:
       name: Image Build & Publish to GCR      
       runs-on: ubuntu-18.04
@@ -165,25 +173,25 @@ jobs:
           retry-delay: 5s # Optional, only applicable to max-attempts > 1
 
      
-  publish-test-results:
-    name: "Publish Unit Tests Results"
-    needs: test
-    runs-on: ubuntu-latest
-    # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
+#   publish-test-results:
+#     name: "Publish Unit Tests Results"
+#     needs: test
+#     runs-on: ubuntu-latest
+#     # the build-and-test job might be skipped, we don't need to run this job then
+#     if: success() || failure()
 
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts
+#     steps:
+#       - name: Download Artifacts
+#         uses: actions/download-artifact@v2
+#         with:
+#           path: artifacts
 
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.6
-        with:
-          check_name: Unit Test Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: jest-junit.xml      
+#       - name: Publish Unit Test Results
+#         uses: EnricoMi/publish-unit-test-result-action@v1.6
+#         with:
+#           check_name: Unit Test Results
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           files: jest-junit.xml      
           
           
      
