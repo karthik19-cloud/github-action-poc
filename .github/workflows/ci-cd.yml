@@ -184,15 +184,15 @@ jobs:
 #           github_token: ${{ secrets.GITHUB_TOKEN }}
 #           files: jest-junit.xml
 
-#   Publish-result:
-#     name: Publish Unit Test Results
-#     runs-on: ubuntu-latest
-#     steps:
-#      - uses: mikepenz/action-junit-report@v1
-#       # if: always()
-#        with:
-#          github_token: ${{secrets.GITHUB_TOKEN }}
-#          report_paths: reports/**/*.xml
+  Publish-result:
+    name: Publish Unit Test Results
+    runs-on: ubuntu-latest
+    steps:
+     - uses: mikepenz/action-junit-report@v1
+      # if: always()
+       with:
+         github_token: ${{secrets.GITHUB_TOKEN }}
+         report_paths: reports/**/*.xml
   
   Polaris-scan:
     name: "Polaris Scan"
