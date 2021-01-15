@@ -279,7 +279,7 @@ jobs:
   # This workflow contains a single job called "build"
   Integration_Test:
     # The type of runner that the job will run on
-     needs: [serviceAvailability]
+    needs: [serviceAvailability]
     runs-on: ubuntu-latest
     env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
