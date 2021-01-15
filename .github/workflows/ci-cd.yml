@@ -37,15 +37,17 @@ jobs:
     steps:      
       - uses: actions/checkout@v2     
       - run: npm install      
-      - name: npm test
-        id: npm_test
-        run: npm test
-      - name: Publish Unit Test Results
-        uses: mikepenz/action-junit-report@v1
-        # if: always()
+#       - name: npm test
+#         id: npm_test
+#         run: npm test
+
+      - uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          report_paths: reports/**/*.xml
+          # this is just an example, this could be any command that will trigger jest
+          test-command: "npm test --coverage"
+          #coverage-comment: true
 #       - name: Upload Unit Test Results
 #         if: always()
 #         uses: actions/upload-artifact@v2
