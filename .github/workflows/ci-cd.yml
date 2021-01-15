@@ -304,10 +304,10 @@ jobs:
       - name: NPM INSTALL
         id: installing_NPM
         run: npm install
-      - run: npm ci  
-      - name: Run Tests
-        id: Running_tests
-        run: npm test
+#       - run: npm ci  
+#       - name: Run Tests
+#         id: Running_tests
+#         run: npm test
       - name: Test Completed
         uses: act10ns/slack@v1
         with:
