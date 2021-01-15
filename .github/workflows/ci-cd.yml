@@ -2,13 +2,13 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - ci-cd-gk
+      - puneet-cicddevops
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
   SERVICE_NAME: helloworld-node
 jobs:
-  test:
+  Build:
     name: Unit test / Lint
     runs-on: ubuntu-latest
     strategy:
@@ -33,6 +33,7 @@ jobs:
       - name: npm test
         id: npm_test
         run: npm test
+Unit Test:
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v2
