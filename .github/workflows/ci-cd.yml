@@ -8,7 +8,7 @@ env:
   RUN_REGION: us-central1
   SERVICE_NAME: helloworld-node
 jobs:
-  test:
+  Build:
     name: Code build & test
     runs-on: ubuntu-latest
     strategy:
@@ -29,16 +29,22 @@ jobs:
         run: npm install      
       - name: npm Build
         id: npm_build
-        run: npm run build --if-present
+        run: npm run build --if-present      
+  test:
+    name: Unit test
+    runs-on: ubuntu-latest   
+    steps:      
+      - uses: actions/checkout@v2     
+      - run: npm install      
       - name: npm test
         id: npm_test
         run: npm test
-      - name: Upload Unit Test Results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Unit Test Results (Python ${{ matrix.python-version }})
-          path: jest-junit.xml
+#       - name: Upload Unit Test Results
+#         if: always()
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: Unit Test Results (Python ${{ matrix.python-version }})
+#           path: jest-junit.xml
 #       - name: Run linters & prettier
 #         uses: wearerequired/lint-action@v1
 #         with:
@@ -53,6 +59,7 @@ jobs:
       needs: [test]      
       steps:        
         - uses: actions/checkout@v2
+        - run: npm install
         # Setup gcloud CLI
         - uses: wearerequired/lint-action@v1
           with:
