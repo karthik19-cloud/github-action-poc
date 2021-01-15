@@ -75,7 +75,7 @@ jobs:
   imageBuild:
       name: Build & Publish image to GCR      
       runs-on: ubuntu-18.04
-      needs: [Linter]      
+      needs: [Linter,Blackduck-SCA,Polaris-scan]      
       steps:        
         - uses: actions/checkout@v2
         # Setup gcloud CLI
