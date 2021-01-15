@@ -59,8 +59,18 @@ jobs:
            with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable linters
-            eslint: true
-            prettier: true
+#             eslint: true
+#             prettier: true
+         - name: npm prettier
+           id: npm_prettier
+           run: npm install --save-dev --save-exact prettier
+         - name: npm format
+           id: npm_format
+           run: npm run format
+         - name: npm lint
+           id: npm_lint
+           run: npm install eslint --save-dev
+           
   imageBuild:
       name: Build & Publish image to GCR      
       runs-on: ubuntu-18.04
@@ -174,15 +184,15 @@ jobs:
 #           github_token: ${{ secrets.GITHUB_TOKEN }}
 #           files: jest-junit.xml
 
-  Publish-result:
-    name: Publish Unit Test Results
-    runs-on: ubuntu-latest
-    steps:
-     - uses: mikepenz/action-junit-report@v1
-      # if: always()
-       with:
-         github_token: ${{secrets.GITHUB_TOKEN }}
-         report_paths: reports/**/*.xml
+#   Publish-result:
+#     name: Publish Unit Test Results
+#     runs-on: ubuntu-latest
+#     steps:
+#      - uses: mikepenz/action-junit-report@v1
+#       # if: always()
+#        with:
+#          github_token: ${{secrets.GITHUB_TOKEN }}
+#          report_paths: reports/**/*.xml
   
   Polaris-scan:
     name: "Polaris Scan"
