@@ -192,7 +192,7 @@ jobs:
       # if: always()
        with:
          github_token: ${{secrets.GITHUB_TOKEN }}
-         report_paths: /*.xml
+         path: jest-junit.xml
   
   Polaris-scan:
     name: "Polaris Scan"
