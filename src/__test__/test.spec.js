@@ -7,7 +7,7 @@ describe("Testing our nodeJS app", () => {
 describe('Google Search Test', () => {
 
     it('should have the right title', (done) => {
-      browser.url('https://google.com/ncr')
+      browser.url('https://google.com/')
       search_box_element = $('[name=\'q\']')
       search_box_element.setValue("BrowserStack\n")
 
