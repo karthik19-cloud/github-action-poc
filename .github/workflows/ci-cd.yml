@@ -55,9 +55,9 @@ jobs:
        needs: [Build,UnitTest]
        if: success()
        steps:
-         - uses: wearerequired/lint-action@v1
-           with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
+#          - uses: wearerequired/lint-action@v1
+#            with:
+#             github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable linters
 #             eslint: true
 #             prettier: true
