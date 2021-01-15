@@ -36,7 +36,7 @@ jobs:
   UnitTest:
        name: Unittest
        runs-on: ubuntu-latest
-#        needs: [Build] 
+       needs: [Build] 
        steps:
         - uses: actions/checkout@v2  
         - name: npm test
