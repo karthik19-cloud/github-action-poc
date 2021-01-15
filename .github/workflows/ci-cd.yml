@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - ci-cd-gk
+      - nilasish_CICDWORK
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -199,3 +199,37 @@ jobs:
         uses: blackducksoftware/github-action@v2
         with:
           args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_API_TOKEN}}" --detect.tools="DETECTOR"'
+#load-test
+  load-test:
+    name: load-test
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v1
+      #- uses: actions/checkout@v2
+      - name: Job starting
+        uses: act10ns/slack@v1
+        with:
+              status: starting
+#               channel: '#nilasishtest'
+        if: always()
+      # Runs a single command using the runners shell
+      - name: Run local k6 test
+        uses: k6io/action@v0.1
+        with:
+              filename: test.js
+              cloud: true
+              token: 29e1e5f6d3f46ec287c75f8eb8d98439defba0ba848a3eacf84838a0a8674271
+      - name: Slack notification
+        uses: act10ns/slack@v1
+        with:
+             status: ${{ job.status }}
+             steps: ${{ toJson(steps) }}
+#              channel: '#nilasishtest'
+        if: always()
