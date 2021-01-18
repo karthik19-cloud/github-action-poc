@@ -1,4 +1,4 @@
-import sum from './sum.js';
+const sum = require("./sum");
  
 describe('sum function', () => {
   it('sums up two integers', () => {
