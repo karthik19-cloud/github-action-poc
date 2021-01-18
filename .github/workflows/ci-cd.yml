@@ -9,7 +9,7 @@ env:
   SERVICE_NAME: helloworld-node
 jobs:
   test:
-    name: Unit test
+    name: Build & test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -38,26 +38,22 @@ jobs:
       - name: npm Build
         id: npm_build
         run: npm run build --if-present
-  lint:
+
+ lint:
       name: Lint & Prettier      
       runs-on: ubuntu-18.04
-      needs: [test]      
+      needs: [test]    
       steps:        
         - uses: actions/checkout@v2
         - name: npm Install
           run: npm install eslint prettier --save-dev     
-        # Setup gcloud CLI
-        - uses: wearerequired/lint-action@v1
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            # Enable linters
-            eslint: true
-            prettier: true
   
+
   imageBuild:
-      name: Build & Publish image to GCR      
+      name: Image Build & Publish to GCR      
       runs-on: ubuntu-18.04
-      needs: [lint, Polaris-scan, Blackduck-SCA]      
+      needs: [lint, Polaris-scan, Blackduck-SCA]
+      if: success()
       steps:        
         - uses: actions/checkout@v2
         # Setup gcloud CLI
@@ -78,6 +74,7 @@ jobs:
     name: Env Provision(Terraform)     
     runs-on: ubuntu-18.04
     needs: [imageBuild]
+    if: success()
     env:
       REPO: ${{ secrets.DOCKER_REPO }} 
     # Setup terraform CLI
@@ -121,7 +118,8 @@ jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-18.04
-    needs: [provision]       
+    needs: [provision]
+    if: success()
     steps:
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -139,6 +137,7 @@ jobs:
     name: Service Availability Check
     runs-on: ubuntu-18.04
     needs: [deploy]
+    if: success()
     env:
       REPO: ${{ secrets.DOCKER_REPO }}
     steps:
@@ -158,7 +157,7 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
+    if: success()
     steps:        
       - uses: actions/checkout@v2       
       - name: Static Analysis with Polaris
@@ -177,7 +176,7 @@ jobs:
     needs: [test]
     runs-on:  ubuntu-16.04
     # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
+    if: success()
     steps:        
       - uses: actions/checkout@v2
       - run: npm install
