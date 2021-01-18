@@ -46,7 +46,13 @@ jobs:
       steps:        
         - uses: actions/checkout@v2
         - name: npm Install
-          run: npm install eslint prettier --save-dev     
+          run: npm install eslint prettier --save-dev   
+        - uses: wearerequired/lint-action@v1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            # Enable linters
+            eslint: true
+            prettier: true
   
 
   imageBuild:
