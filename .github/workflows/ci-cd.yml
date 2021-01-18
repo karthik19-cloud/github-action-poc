@@ -150,7 +150,25 @@ jobs:
           max-attempts: 3 # Optional, defaults to 1
           retry-delay: 5s # Optional, only applicable to max-attempts > 1
 
-             
+  load-test:
+    name: Performance Test
+    needs: [serviceAvailability]
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    if: success()
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v1     
+      # Runs a single command using the runners shell
+      - name: Run local k6 test
+        uses: k6io/action@v0.1
+        with:
+              filename: perf-test.js
+              cloud: true
+              token: 29e1e5f6d3f46ec287c75f8eb8d98439defba0ba848a3eacf84838a0a8674271
+      
      
   Polaris-scan:
     name: "Polaris Scan"
