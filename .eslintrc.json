@@ -6,7 +6,11 @@
             "jsx": true
         }
     },
+    "parser": "esprima",
     "rules": {
-        "semi": 2
+        "semi": 2,
+        "eqeqeq": 0,
+        "curly": 2,
+        "quotes": [2, "double"]
     }
 }
