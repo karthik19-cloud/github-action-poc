@@ -140,7 +140,7 @@ jobs:
           --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" --platform "managed" --allow-unauthenticated
  
   serviceAvailability:
-    name: Service Availability Check
+    name: API Health Check
     runs-on: ubuntu-18.04
     needs: [deploy]
     if: success()
