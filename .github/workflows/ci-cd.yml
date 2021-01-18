@@ -26,13 +26,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm Install
         id: npm_install
-        run: npm install      
-      - name: npm Build
-        id: npm_build
-        run: npm run build --if-present
-      #- name: npm test
-      #  id: npm_test
-      #  run: npm test
+        run: npm ci     
       - name: Run unit test
         uses: mattallty/jest-github-action@v1.0.3
         env:
@@ -41,7 +35,9 @@ jobs:
           # this is just an example, this could be any command that will trigger jest
           test-command: "npm test --coverage"
           #coverage-comment: true
-      
+      - name: npm Build
+        id: npm_build
+        run: npm run build --if-present
   lint:
       name: Lint & Prettier      
       runs-on: ubuntu-18.04
