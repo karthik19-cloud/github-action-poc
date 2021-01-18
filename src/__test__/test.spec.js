@@ -1,4 +1,4 @@
-import sum from './sum.js';
+import sum from '/server.js';
  
 describe('sum function', () => {
   it('sums up two integers', () => {
