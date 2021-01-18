@@ -4,8 +4,8 @@ describe("Testing our nodeJS app", () => {
   });
 });
 
-describe("Negative testing our nodeJS app", () => {
+describe("testing #2 our nodeJS app", () => {
   it("Testing using Github Actions", () => {
-    expect(3).toBe(2);
+    expect(2).toBe(2);
   });
 });
