@@ -194,6 +194,20 @@ jobs:
           wget -q https://ikea.polaris.synopsys.com/api/tools/polaris_cli-linux64.zip
           unzip -j polaris_cli-linux64.zip -d /tmp
           /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure
+      
+      #Upload the polaris scan results to gcp cloud storage bucket
+      - id: upload-file
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          path: /home/runner/work/github-action-poc/github-action-poc/.synopsys/polaris
+          destination: polaris-scan-results/cli-scan.json
+
+      # Example of using the output
+      - id: uploaded-files
+        uses: foo/bar@master
+        env:
+          file: ${{steps.upload-file.outputs.uploaded}}
+      
    
   Blackduck-SCA:
     name: "Blackduck Scan"
