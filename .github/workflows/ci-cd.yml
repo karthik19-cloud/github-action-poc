@@ -202,13 +202,7 @@ jobs:
           path: /home/runner/work/github-action-poc/github-action-poc/.synopsys/polaris
           destination: polaris-scan-results/cli-scan.json
 
-      # Example of using the output
-      - id: uploaded-files
-        uses: foo/bar@master
-        env:
-          file: ${{steps.upload-file.outputs.uploaded}}
-      
-   
+             
   Blackduck-SCA:
     name: "Blackduck Scan"
     needs: [test]
