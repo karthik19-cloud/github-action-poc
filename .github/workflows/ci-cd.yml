@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # this is just an example, this could be any command that will trigger jest
+          # this is just an example, this could be any command that will trigger jest test
           test-command: "npm test --coverage"
           #coverage-comment: true
       - name: npm Build
