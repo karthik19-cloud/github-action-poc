@@ -50,7 +50,8 @@ jobs:
         - uses: wearerequired/lint-action@v1
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
-            continue_on_error: false
+            #continue_on_error: false
+            eslint_args: "--max-errors 0"
             # Enable linters
             eslint: true
             prettier: false
@@ -179,7 +180,7 @@ jobs:
      
   Polaris-scan:
     name: "Polaris Scan"
-    needs: [test]
+    needs: [lint]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success()
@@ -208,7 +209,7 @@ jobs:
              
   Blackduck-SCA:
     name: "Blackduck Scan"
-    needs: [test]
+    needs: [lint]
     runs-on:  ubuntu-16.04
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success()
