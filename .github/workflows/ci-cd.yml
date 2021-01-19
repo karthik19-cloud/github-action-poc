@@ -199,6 +199,7 @@ jobs:
       - id: upload-file
         uses: google-github-actions/upload-cloud-storage@main
         with:
+          credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
           path: /home/runner/work/github-action-poc/github-action-poc/.synopsys/polaris
           destination: polaris-scan-results/cli-scan.json
 
