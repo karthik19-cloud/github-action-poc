@@ -193,15 +193,15 @@ jobs:
           export POLARIS_ACCESS_TOKEN=${{ secrets.POLARIS_ACCESS_TOKEN}}
           wget -q https://ikea.polaris.synopsys.com/api/tools/polaris_cli-linux64.zip
           unzip -j polaris_cli-linux64.zip -d /tmp
-          /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure
+          /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure | tee polaris-output.txt
       
       #Upload the polaris scan results to gcp cloud storage bucket
       - id: upload-file
         uses: google-github-actions/upload-cloud-storage@main
         with:
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-          path: /home/runner/work/github-action-poc/github-action-poc
-          destination: polaris-scan-results/cli-scan
+          path: /tmp/polaris/polaris-output.txt
+          destination: polaris-scan-results/cli-scan1
 
              
   Blackduck-SCA:
