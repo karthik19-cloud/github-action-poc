@@ -32,12 +32,7 @@ jobs:
             mkdir /tmp/test
             
       - name: Run unit test
-        uses: mattallty/jest-github-action@v1.0.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # this is just an example, this could be any command that will trigger jest test
-          test-command: "npm test --coverage --json --outputFile=/tmp/test/jest-result.json"
+        run: npm test --coverage --json --outputFile=/tmp/test/jest-result.json         
           #coverage-comment: true
       #- name: npm Build
       #   id: npm_build
