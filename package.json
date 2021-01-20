@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",    
-    "test": "jest",
+    "test": "jest --coverage --json --outputFile=/tmp/test/jest-result.json",
     "lint": "eslint src --format json --output-file /tmp/test/lint-result.json",
     "prettier": "prettier"
   },  
