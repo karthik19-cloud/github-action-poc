@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main12
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -44,7 +44,7 @@ jobs:
       #  run: npm run build --if-present
       
       - name: Linting
-        run: npm run eslint
+        run: npm run lint
   
       
       #Upload the polaris scan results to gcp cloud storage bucket
