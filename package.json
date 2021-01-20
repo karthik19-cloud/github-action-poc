@@ -6,7 +6,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",    
-    "test": "jest"   
+    "test": "jest",
+    "eslint": "eslint",
+    "prettier": "prettier"
   },  
   "dependencies": {
     "express": "^4.16.1",
