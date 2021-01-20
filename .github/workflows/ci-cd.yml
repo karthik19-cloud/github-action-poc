@@ -46,14 +46,24 @@ jobs:
       - name: Linting
         run: npm run lint
   
-      
+      - id: upload-log-file
+        uses: google-github-actions/upload-cloud-storage@main
+        if: success() | failure()
+        with:
+          credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
+          path: /home/runner/.npm/_logs/
+          destination: polaris-scan-results/logs
+          
       #Upload the polaris scan results to gcp cloud storage bucket
       - id: upload-file
         uses: google-github-actions/upload-cloud-storage@main
+        if: success() | failure()
         with:
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
           path: /tmp/test
           destination: polaris-scan-results/lint
+          
+      
 
   #lint:
       #name: Lint & Prettier      
