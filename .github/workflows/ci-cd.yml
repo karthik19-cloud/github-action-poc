@@ -46,15 +46,25 @@ jobs:
       steps:        
         - uses: actions/checkout@v2
         - name: npm Install
-          run: npm install eslint prettier --save-dev   
-        - uses: wearerequired/lint-action@v1
+          run: npm install -g eslint prettier  
+        - name: Linting
+          run: eslint --ext .jsx,.js -c ~/my-eslint.json
+        
+         #Upload the polaris scan results to gcp cloud storage bucket
+        - name: upload-file
+          uses: google-github-actions/upload-cloud-storage@main
           with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            #continue_on_error: false
-            eslint_args: "--max-errors 0"
+            credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
+            path: ~/
+            destination: polaris-scan-results/cli-scan2
+        #- uses: wearerequired/lint-action@v1
+         # with:
+           # github_token: ${{ secrets.GITHUB_TOKEN }}
+            ##continue_on_error: false
+            #eslint_args: "--max-errors 0"
             # Enable linters
-            eslint: true
-            prettier: false
+            #eslint: true
+            #prettier: false
   
 
   imageBuild:
@@ -195,16 +205,15 @@ jobs:
           export POLARIS_ACCESS_TOKEN=${{ secrets.POLARIS_ACCESS_TOKEN}}
           wget -q https://ikea.polaris.synopsys.com/api/tools/polaris_cli-linux64.zip
           unzip -j polaris_cli-linux64.zip -d /tmp          
-          mkdir /tmp/output
-          /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure | tee /tmp/output/polaris-output.txt
+          /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure | tee ~/polaris-output.txt
       
       #Upload the polaris scan results to gcp cloud storage bucket
       - id: upload-file
         uses: google-github-actions/upload-cloud-storage@main
         with:
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-          path: /tmp/output
-          destination: polaris-scan-results/cli-scan1
+          path: ~/
+          destination: polaris-scan-results/cli-scan2
 
              
   Blackduck-SCA:
