@@ -42,7 +42,7 @@ jobs:
         run: |-
             mkdir /tmp/lint
      # Run ESLint
-      - uses: eslint/github-action@v0.1.0
+      - uses: eslint/github-action@v0
       
       #Upload the polaris scan results to gcp cloud storage bucket
       - id: upload-file
