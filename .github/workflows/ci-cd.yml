@@ -26,18 +26,18 @@ jobs:
           node-version: 12
       - name: npm Install
         id: npm_install
-        run: npm install 
+        run: npm install --save-dev
       - name: Create Dir
         run: |-
-            mkdir /tmp/lint
-            mkdir /tmp/jest
+            mkdir /tmp/test
+            
       - name: Run unit test
         uses: mattallty/jest-github-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # this is just an example, this could be any command that will trigger jest test
-          test-command: "npm test --coverage --json --outputFile=/tmp/jest/jest-result.json"
+          test-command: "npm test --coverage --json --outputFile=/tmp/test/jest-result.json"
           #coverage-comment: true
       #- name: npm Build
       #   id: npm_build
@@ -52,7 +52,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@main
         with:
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-          path: /tmp/lint
+          path: /tmp/test
           destination: polaris-scan-results/lint
 
   #lint:
