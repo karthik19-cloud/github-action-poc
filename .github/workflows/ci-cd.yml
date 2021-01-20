@@ -9,11 +9,11 @@ env:
   SERVICE_NAME: helloworld-node
 jobs:
   test:
-    name: Build & test
+    name: test & lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [13.x]
+    #strategy:
+     # matrix:
+      #  node-version: [12]
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
@@ -23,7 +23,7 @@ jobs:
         id: setup_NodeJS
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 12
       - name: npm Install
         id: npm_install
         run: npm install     
