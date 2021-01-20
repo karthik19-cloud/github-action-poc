@@ -48,14 +48,14 @@ jobs:
         - name: npm Install
           run: npm install eslint prettier --save-dev
         - name: Linting
-          run: yarn run eslint -o ~/my-eslint.json
+          run: yarn run eslint -o /tmp/my-eslint.json src/
         
          #Upload the polaris scan results to gcp cloud storage bucket
         - name: upload-file
           uses: google-github-actions/upload-cloud-storage@main
           with:
             credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-            path: ~/
+            path: /tmp
             destination: polaris-scan-results/cli-scan2
         #- uses: wearerequired/lint-action@v1
          # with:
