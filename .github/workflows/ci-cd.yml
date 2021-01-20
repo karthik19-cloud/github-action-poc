@@ -38,28 +38,30 @@ jobs:
       - name: npm Build
         id: npm_build
         run: npm run build --if-present
+     # Run ESLint
+      - uses: eslint/github-action@v0
 
-  lint:
-      name: Lint & Prettier      
-      runs-on: ubuntu-18.04
-      needs: [test]    
-      steps:        
-        - uses: actions/checkout@v2
-        - name: npm Install
-          run: npm install eslint prettier --save-dev
-        - name: Build
-          run: |-
-           mkdir /tmp/lint
-        - name: Linting
-          run: npx run eslint .
+  #lint:
+      #name: Lint & Prettier      
+      #runs-on: ubuntu-18.04
+      #needs: [test]    
+      #steps:        
+        #- uses: actions/checkout@v2
+        #- name: npm Install
+         # run: npm install eslint prettier --save-dev
+       # - name: Build
+         # run: |-
+         #  mkdir /tmp/lint
+        #- name: Linting
+         # run: npx run eslint .
         
          #Upload the polaris scan results to gcp cloud storage bucket
-        - name: upload-file
-          uses: google-github-actions/upload-cloud-storage@main
-          with:
-            credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-            path: /tmp/lint
-            destination: polaris-scan-results/cli-scan2
+        #- name: upload-file
+         # uses: google-github-actions/upload-cloud-storage@main
+        #  with:
+          #  credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
+           # path: /tmp/lint
+            #destination: polaris-scan-results/cli-scan2
         #- uses: wearerequired/lint-action@v1
          # with:
            # github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +75,7 @@ jobs:
   imageBuild:
       name: Image Build & Publish to GCR      
       runs-on: ubuntu-18.04
-      needs: [lint, Polaris-scan, Blackduck-SCA]
+      needs: [Polaris-scan, Blackduck-SCA]
       if: success()
       steps:        
         - uses: actions/checkout@v2
