@@ -46,7 +46,7 @@ jobs:
       - uses: sibiraj-s/action-eslint@v1
         with:
           eslintArgs: 'src/ --output-file /tmp/lint/lint-report.json --format json'
-          extensions: 'js, jsx, ts, tsx'
+          #extensions: 'js, jsx, ts, tsx'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
