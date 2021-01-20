@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main123
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -48,7 +48,7 @@ jobs:
         - name: npm Install
           run: npm install eslint prettier --save-dev
         - name: Linting
-          run: yarn run eslint -o /tmp/my-eslint.json src/
+          run: yarn run eslint
         
          #Upload the polaris scan results to gcp cloud storage bucket
         - name: upload-file
