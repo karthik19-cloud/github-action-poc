@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main12
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -195,7 +195,7 @@ jobs:
      
   Polaris-scan:
     name: "Polaris Scan"
-    needs: [lint]
+    needs: [test]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success()
@@ -223,7 +223,7 @@ jobs:
              
   Blackduck-SCA:
     name: "Blackduck Scan"
-    needs: [lint]
+    needs: [test]
     runs-on:  ubuntu-16.04
     # the build-and-test job might be skipped, we don't need to run this job then
     if: success()
