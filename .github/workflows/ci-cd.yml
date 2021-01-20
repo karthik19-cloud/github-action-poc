@@ -39,7 +39,7 @@ jobs:
         id: npm_build
         run: npm run build --if-present
      # Run ESLint
-      - uses: eslint/github-action@v0
+      - uses: eslint/github-action@v0.1.0
 
   #lint:
       #name: Lint & Prettier      
