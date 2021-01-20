@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main12
+      - main
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -55,7 +55,7 @@ jobs:
         with:
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
           path: /tmp/test
-          destination: polaris-scan-results/lint
+          destination: polaris-scan-results/test
           
       
 
