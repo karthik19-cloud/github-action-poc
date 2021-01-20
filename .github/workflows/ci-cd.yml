@@ -48,7 +48,7 @@ jobs:
         - name: npm Install
           run: npm install eslint prettier --save-dev
         - name: Linting
-          run: npm run eslint -o ~/my-eslint.json
+          run: yarn run eslint -o ~/my-eslint.json
         
          #Upload the polaris scan results to gcp cloud storage bucket
         - name: upload-file
