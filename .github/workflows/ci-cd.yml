@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main123
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -47,6 +47,9 @@ jobs:
         - uses: actions/checkout@v2
         - name: npm Install
           run: npm install eslint prettier --save-dev
+        - name: Build
+          run: |-
+           mkdir /tmp/lint
         - name: Linting
           run: yarn run eslint
         
@@ -55,7 +58,7 @@ jobs:
           uses: google-github-actions/upload-cloud-storage@main
           with:
             credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-            path: /tmp
+            path: /tmp/lint
             destination: polaris-scan-results/cli-scan2
         #- uses: wearerequired/lint-action@v1
          # with:
