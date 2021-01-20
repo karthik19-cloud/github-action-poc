@@ -42,7 +42,13 @@ jobs:
         run: |-
             mkdir /tmp/lint
      # Run ESLint
-      - uses: eslint/github-action@v0
+      #- uses: eslint/github-action@v0
+      - uses: sibiraj-s/action-eslint@v1
+        with:
+          eslintArgs: '--ignore-path .gitignore --quiet --output-file /tmp/lint/lint-report.json --format json'
+          extensions: 'js, jsx, ts, tsx'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       #Upload the polaris scan results to gcp cloud storage bucket
       - id: upload-file
