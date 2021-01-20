@@ -46,7 +46,7 @@ jobs:
       steps:        
         - uses: actions/checkout@v2
         - name: npm Install
-          run: npm install -g eslint prettier  
+          run: npm install eslint prettier --save-dev
         - name: Linting
           run: eslint --ext .jsx,.js -c ~/my-eslint.json
         
