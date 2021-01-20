@@ -45,7 +45,7 @@ jobs:
       #- uses: eslint/github-action@v0
       - uses: sibiraj-s/action-eslint@v1
         with:
-          eslintArgs: '--ignore-path .gitignore --quiet --output-file /tmp/lint/lint-report.json --format json'
+          eslintArgs: 'src/ --output-file /tmp/lint/lint-report.json --format json'
           extensions: 'js, jsx, ts, tsx'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -227,15 +227,15 @@ jobs:
           export POLARIS_ACCESS_TOKEN=${{ secrets.POLARIS_ACCESS_TOKEN}}
           wget -q https://ikea.polaris.synopsys.com/api/tools/polaris_cli-linux64.zip
           unzip -j polaris_cli-linux64.zip -d /tmp 
-          mkdir /tmp/polaris         
-          /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure | tee  /tmp/polaris/polaris-output.txt
+          mkdir /tmp/polaris-scan         
+          /tmp/polaris -c polaris.yml analyze -w --coverity-ignore-capture-failure | tee  /tmp/polaris-scan/polaris-output.txt
       
       #Upload the polaris scan results to gcp cloud storage bucket
       - id: upload-file
         uses: google-github-actions/upload-cloud-storage@main
         with:
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-          path: /tmp/polaris
+          path: /tmp/polaris-scan
           destination: polaris-scan-results/polaris
 
              
