@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main12
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -32,7 +32,7 @@ jobs:
             mkdir /tmp/test
             
       - name: Run unit test
-        run: npm test --coverage --json --outputFile=/tmp/test/jest-result.json         
+        run: npm run test         
           #coverage-comment: true
       #- name: npm Build
       #   id: npm_build
