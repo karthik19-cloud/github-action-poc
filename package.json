@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",    
     "test": "jest",
-    "eslint": "eslint",
+    "eslint": "eslint --ext .js -o /tmp/eslint-result.json",
     "prettier": "prettier"
   },  
   "dependencies": {
