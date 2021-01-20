@@ -2,7 +2,7 @@ name: Test, Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main12
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: us-central1
@@ -46,16 +46,11 @@ jobs:
       - name: Linting
         run: npm run lint
   
-      - id: upload-log-file
-        uses: google-github-actions/upload-cloud-storage@main
-        if: ${{ failure() }}
-        with:
-          credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-          path: /home/runner/.npm/_logs/
-          destination: polaris-scan-results/logs
+      
           
       #Upload the polaris scan results to gcp cloud storage bucket
       - id: upload-file
+        if: ${{ failure() }}
         uses: google-github-actions/upload-cloud-storage@main        
         with:
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
