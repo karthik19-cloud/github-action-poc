@@ -39,12 +39,12 @@ jobs:
           # this is just an example, this could be any command that will trigger jest test
           test-command: "npm test --coverage --json --outputFile=/tmp/jest/jest-result.json"
           #coverage-comment: true
-      - name: npm Build
-        id: npm_build
-        run: npm run build --if-present
+      #- name: npm Build
+      #   id: npm_build
+      #  run: npm run build --if-present
       
       - name: Linting
-        run: npx run eslint
+        run: npm run eslint
   
       
       #Upload the polaris scan results to gcp cloud storage bucket
