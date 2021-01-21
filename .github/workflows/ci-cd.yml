@@ -211,7 +211,7 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
-    if: success()
+    if: always()
     steps:        
       - uses: actions/checkout@v2       
       - name: Static Analysis with Polaris
@@ -240,7 +240,7 @@ jobs:
     needs: [test]
     runs-on:  ubuntu-16.04
     # the build-and-test job might be skipped, we don't need to run this job then
-    if: success()
+    if: always()
     steps:        
       - uses: actions/checkout@v2
       - run: npm install
