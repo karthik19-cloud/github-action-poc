@@ -89,7 +89,7 @@ jobs:
       name: Image Build & Publish to GCR      
       runs-on: ubuntu-18.04
       needs: [Polaris-scan, Blackduck-SCA]
-      if: always()
+      if: success()
       steps:        
         - uses: actions/checkout@v2
         # Setup gcloud CLI
