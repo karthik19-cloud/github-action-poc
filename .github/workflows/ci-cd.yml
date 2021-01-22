@@ -9,7 +9,7 @@ env:
   SERVICE_NAME: helloworld-node
 jobs:
   test:
-    name: test & lint
+    name: Unit test & ESlint
     runs-on: ubuntu-latest
     #strategy:
      # matrix:
@@ -89,7 +89,7 @@ jobs:
       name: Image Build & Publish to GCR      
       runs-on: ubuntu-18.04
       needs: [Polaris-scan, Blackduck-SCA]
-      if: success()
+      if: always()
       steps:        
         - uses: actions/checkout@v2
         # Setup gcloud CLI
@@ -110,7 +110,7 @@ jobs:
     name: Env Provision(Terraform)     
     runs-on: ubuntu-18.04
     needs: [imageBuild]
-    if: success()
+    if: always()
     env:
       REPO: ${{ secrets.DOCKER_REPO }} 
     # Setup terraform CLI
@@ -155,7 +155,7 @@ jobs:
     name: Deploy to Cloud Run
     runs-on: ubuntu-18.04
     needs: [provision]
-    if: success()
+    if: always()
     steps:
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -173,7 +173,7 @@ jobs:
     name: API Health Check
     runs-on: ubuntu-18.04
     needs: [deploy]
-    if: success()
+    if: always()
     env:
       REPO: ${{ secrets.DOCKER_REPO }}
     steps:
@@ -191,7 +191,7 @@ jobs:
     needs: [serviceAvailability]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    if: success()
+    if: always()
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
