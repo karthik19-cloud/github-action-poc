@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",    
     "test": "jest --coverage --json --outputFile=/tmp/test/jest-result.json",
-    "lint": "eslint src --format json --output-file /tmp/test/lint-result.json",
+    "lint": "eslint src --format json --output-file /tmp/test/lint-result.json; exit 0",
     "prettier": "prettier"
   },  
   "dependencies": {
