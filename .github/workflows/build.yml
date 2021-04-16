@@ -21,12 +21,16 @@ jobs:
         run:  sudo npm install -g jest
       - name: Run Tests
         run:  npm run test
-      - run: ls -lrt /home/runner/work
+      - run: ls -lrt reports
         shell: bash
-      - run: ls -lrt /home/runner/work/github-action-poc
+      - run: ls -lrt coverage
         shell: bash
-      - run: ls -lrt /
+      - run: ls -lrt /home/runner/work/github-action-poc/github-action-poc
         shell: bash
+      - run: cat reports/test-report.xml
+        shell: bash
+      - run: cat coverage/lcov.info
+        shell: bash  
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
