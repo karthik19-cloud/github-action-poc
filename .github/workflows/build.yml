@@ -23,7 +23,7 @@ jobs:
         run:  npm run test
       - run: ls -lrt /home/runner/work
         shell: bash
-      - run: ls -lrt /github/workspace
+      - run: ls -lrt /home/runner/work/github-action-poc
         shell: bash
       - run: ls -lrt /
         shell: bash
