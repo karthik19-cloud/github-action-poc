@@ -21,6 +21,12 @@ jobs:
         run:  sudo npm install -g jest
       - name: Run Tests
         run:  npm run test
+      - run: ls -lrt /home/runner/work
+        shell: bash
+      - run: ls -lrt /github/workspace
+        shell: bash
+      - run: ls -lrt /
+        shell: bash
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
